@@ -64,6 +64,70 @@ pub fn insert_sort(a: &mut [i32]) {
     }
 }
 
+fn left(i: usize) -> usize {
+    2*(i+1)-1
+}
+
+fn right(i: usize) -> usize {
+    2*(i+1)
+}
+
+fn parent(i: usize) -> usize {
+    if i == 0 {
+        return i;
+    }
+    (i-1)/2
+}
+
+pub fn max_heap_sort(a: &mut [i32]) {
+    let mut last = a.len() - 1;
+    while last > 0 {
+        max_heapify(&mut a[0..last+1], 0);
+
+        let t = a[last];
+        a[last] = a[0];
+        a[0] = t;
+
+        last = last - 1;
+    }
+}
+
+pub fn max_heapify(a: &mut [i32], i: usize) {
+    let len = a.len();
+
+    let l;
+    let r;
+
+    l = left(i);
+    r = right(i);
+
+    let mut largest = i;
+    if l < len && a[i] < a[l] {
+        largest = l;
+    }
+
+    if r < len && a[largest] < a[r] {
+        largest = r;
+    }
+
+    if largest != i {
+        let t = a[largest];
+        a[largest] = a[i];
+        a[i] = t;
+
+        let p = parent(i);
+        max_heapify(a, p);
+    }
+
+    if l < len {
+        max_heapify(a, l);
+    }
+
+    if r < len {
+        max_heapify(a, r);
+    }
+}
+
 #[test]
 fn merge_sort_test() {
     let mut test_cases = vec![
@@ -102,6 +166,23 @@ fn insert_sort_test() {
 
     for test_case in &mut test_cases {
         insert_sort(&mut test_case.0);
+        assert_eq!(test_case.0, test_case.1);
+    }
+}
+
+#[test]
+fn build_max_heap_test() {
+    let mut test_cases = vec![
+        (vec![], vec![]),
+        (vec![1], vec![1]),
+        (vec![3, 4], vec![4, 3]),
+        (vec![4, 3], vec![4, 3]),
+        (vec![3, 4, 1], vec![4, 3, 1]),
+        (vec![4, 1, 3, 2, 16, 9, 10, 14, 8, 7], vec![16, 14, 10, 8, 7, 9, 3, 2, 4, 1]),
+    ];
+
+    for test_case in &mut test_cases {
+        max_heapify(&mut test_case.0, 0);
         assert_eq!(test_case.0, test_case.1);
     }
 }

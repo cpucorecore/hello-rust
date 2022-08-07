@@ -1,4 +1,4 @@
-use sort::{insert_sort, merge_sort};
+use sort::{insert_sort, merge_sort, max_heap_sort};
 
 fn main() {
     let mut a = vec![];
@@ -16,4 +16,8 @@ fn main() {
     println!("before merge sort: {:?}", a);
     merge_sort(&mut a);
     println!("after merge sort: {:?}", a);
+
+    let mut a = [4, 1, 3, 2, 16, 9, 10, 14, 8, 7];
+    max_heap_sort(&mut a);
+    println!("{:?}", a);
 }
